@@ -1,17 +1,16 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:forcam_mdc_generator/models/plugin_repository.dart';
 import 'package:forcam_mdc_generator/io/dcu_generator.dart';
 
-class DCUSelector extends StatefulWidget {
-  DCUSelector({Key? key, required this.title}) : super(key: key);
+class DCUSignalSelector extends StatefulWidget {
+  DCUSignalSelector({Key? key, required this.title}) : super(key: key);
   final String title;
 
   @override
-  _DCUSelectorState createState() => _DCUSelectorState();
+  _DCUSignalSelectorState createState() => _DCUSignalSelectorState();
 }
 
-class _DCUSelectorState extends State<DCUSelector> {
+class _DCUSignalSelectorState extends State<DCUSignalSelector> {
   final templateName = TextEditingController();
   final templateDesc = TextEditingController();
 
@@ -20,8 +19,8 @@ class _DCUSelectorState extends State<DCUSelector> {
   List<String> _plugins = ["Plugin Types"];
   List<String> _busTypes = ["Bus Types"];
 
-  String _selectedPlugin = "S7-1200";
-  String _selectedBus = "IPS7Link";
+  String _selectedPlugin = "AUDI_SPS";
+  String _selectedBus = "AUDI_SPS_TCP";
 
   @override
   void initState() {
@@ -44,7 +43,7 @@ class _DCUSelectorState extends State<DCUSelector> {
               height: 25.0,
             ),
             Text(
-              'Select DCU Template',
+              'Add DCU Signals',
               style: Theme.of(context).textTheme.headline5,
             ),
             SizedBox(
@@ -64,7 +63,12 @@ class _DCUSelectorState extends State<DCUSelector> {
                           TextFormField(
                             controller: templateName,
                             decoration:
-                                InputDecoration(hintText: 'Template Name'),
+                            InputDecoration(hintText: 'Name'),
+                          ),
+                          TextFormField(
+                            controller: templateName,
+                            decoration:
+                            InputDecoration(hintText: 'Signal Group'),
                           ),
                           DropdownButtonFormField(
                             value: _selectedPlugin,
@@ -91,7 +95,12 @@ class _DCUSelectorState extends State<DCUSelector> {
                           TextFormField(
                             controller: templateDesc,
                             decoration:
-                                InputDecoration(hintText: 'Description'),
+                            InputDecoration(hintText: 'Alias'),
+                          ),
+                          TextFormField(
+                            controller: templateDesc,
+                            decoration:
+                            InputDecoration(hintText: 'Comment'),
                           ),
                         ],
                       ),

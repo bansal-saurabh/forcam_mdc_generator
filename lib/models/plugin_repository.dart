@@ -17,40 +17,163 @@ class PluginRepository {
 
   List _dcuplugins = [
     {
-      "plugin": "S7-1200",
-      "alias": "S7-1200",
+      "plugin": "AUDI_SPS",
+      "alias": "AUDI_SPS",
       "bus": [
-        "IPS7Link",
+        "AUDI_SPS_TCP",
+      ]
+    },
+    {
+      "plugin": "MDE_UDP_CTRL_01",
+      "alias": "MDE_UDP_CTRL_01",
+      "bus": [
+        "MDE_UDP_PROT_01",
         "IBHLink",
       ]
     },
     {
-      "plugin": "S7-1500",
-      "alias": "S7-1500",
+      "plugin": "HDH",
+      "alias": "HDH",
       "bus": [
-        "IPS7Link",
-        "IBHLink",
+        "HDHLNK",
       ]
     },
     {
-      "plugin": "OPC UA",
-      "alias": "OPC UA",
+      "plugin": "IBX",
+      "alias": "IBX",
       "bus": [
-        "OPCUA Prot",
+        "IBX_TCP",
       ]
     },
     {
-      "plugin": "OPC DA",
-      "alias": "OPC DA",
+      "plugin": "IOS",
+      "alias": "IOS",
       "bus": [
-        "OPCDA Prot",
+        "IOSCOM",
       ]
     },
     {
-      "plugin": "RPCSinumerik",
-      "alias": "RPCSinumerik",
+      "plugin": "MTCONNECT",
+      "alias": "MTCONNECT",
       "bus": [
-        "RPC Bus",
+        "MTCONNECTPROT",
+      ]
+    },
+    {
+      "plugin": "OPC_DA_1",
+      "alias": "OPC_DA_1",
+      "bus": [
+        "OPC_DA_1PROT",
+      ]
+    },
+    {
+      "plugin": "OPCDAXML",
+      "alias": "OPCDAXML",
+      "bus": [
+        "OPCDAXML_PROT",
+      ]
+    },
+    {
+      "plugin": "S5_1XX",
+      "alias": "S5_1XX",
+      "bus": [
+        "IBHLINK_S5",
+        "IBX_TCP_PF",
+        "IPS5LNK",
+        "SIMATIC_TCP",
+      ]
+    },
+    {
+      "plugin": "S7_200",
+      "alias": "S7_200",
+      "bus": [
+        "DDES7LNK",
+        "IBX_TCP_PF",
+        "IPS7LNK",
+        "MPIS7LNK",
+      ]
+    },
+    {
+      "plugin": "S7_300",
+      "alias": "S7_300",
+      "bus": [
+        "DDES7LNK",
+        "IBHLINK_S7",
+        "IBX_TCP_PF",
+        "IPS7LNK",
+        "MPIS7LNK",
+        "SIMATIC_TCP",
+      ]
+    },
+    {
+      "plugin": "S7_400",
+      "alias": "S7_400",
+      "bus": [
+        "DDES7LNK",
+        "IBHLINK_S7",
+        "IBX_TCP_PF",
+        "IPS7LNK",
+        "MPIS7LNK",
+        "SIMATIC_TCP",
+      ]
+    },
+    {
+      "plugin": "S7_1200",
+      "alias": "S7_1200",
+      "bus": [
+        "DDES7LNK",
+        "IBHLINK_S7",
+        "IBX_TCP_PF",
+        "IPS7LNK",
+        "MPIS7LNK",
+        "SIMATIC_TCP",
+      ]
+    },
+    {
+      "plugin": "S7_1500",
+      "alias": "S7_1500",
+      "bus": [
+        "DDES7LNK",
+        "IBHLINK_S7",
+        "IBX_TCP_PF",
+        "IPS7LNK",
+        "MPIS7LNK",
+        "SIMATIC_TCP",
+      ]
+    },
+    {
+      "plugin": "FANUC10",
+      "alias": "FANUC10",
+      "bus": [
+        "FANUCFOCAS12",
+      ]
+    },
+    {
+      "plugin": "ROCKWELL",
+      "alias": "ROCKWELL",
+      "bus": [
+        "ROCKWELLPROT",
+      ]
+    },
+    {
+      "plugin": "OPCUA",
+      "alias": "OPCUA",
+      "bus": [
+        "OPCUAPROT",
+      ]
+    },
+    {
+      "plugin": "DATAEXCHANGE",
+      "alias": "DATAEXCHANGE",
+      "bus": [
+        "DATAEXCHANGEPROT",
+      ]
+    },
+    {
+      "plugin": "MQTT",
+      "alias": "MQTT",
+      "bus": [
+        "MQTTPROT",
       ]
     },
   ];

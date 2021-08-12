@@ -18,9 +18,6 @@ class DCUGenerator {
     try {
       final file = await _localFile;
 
-      // Read the file
-      final contents = await file.readAsString();
-
       // Read the document
       final document = XmlDocument.parse(file.readAsStringSync());
 
