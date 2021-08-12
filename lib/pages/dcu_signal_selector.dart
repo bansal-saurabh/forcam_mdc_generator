@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:forcam_mdc_generator/models/plugin_repository.dart';
 import 'package:forcam_mdc_generator/io/dcu_generator.dart';
+import 'package:forcam_mdc_generator/signals/mtconnectprot.dart';
 
 class DCUSignalSelector extends StatefulWidget {
   DCUSignalSelector({Key? key, required this.title}) : super(key: key);
@@ -14,18 +15,18 @@ class _DCUSignalSelectorState extends State<DCUSignalSelector> {
   final templateName = TextEditingController();
   final templateDesc = TextEditingController();
 
-  PluginRepository repository = PluginRepository();
+  MTConnectProt mtConnectProt = MTConnectProt();
 
-  List<String> _plugins = ["Plugin Types"];
-  List<String> _busTypes = ["Bus Types"];
+  List<String> _signals = ["Plugin Types"];
+  // List<String> _busTypes = ["Bus Types"];
 
-  String _selectedPlugin = "AUDI_SPS";
-  String _selectedBus = "AUDI_SPS_TCP";
+  String _selectedSignal = "I";
+  // String _selectedBus = "AUDI_SPS_TCP";
 
   @override
   void initState() {
-    _plugins = repository.getStates();
-    _busTypes = repository.getBusByPlugin(_selectedPlugin);
+    _signals = mtConnectProt.getSignals();
+    // _busTypes = repository.getBusByPlugin(_selectedSignal);
     super.initState();
   }
 
@@ -71,26 +72,30 @@ class _DCUSignalSelectorState extends State<DCUSignalSelector> {
                             InputDecoration(hintText: 'Signal Group'),
                           ),
                           DropdownButtonFormField(
-                            value: _selectedPlugin,
+                            value: _selectedSignal,
                             onChanged: (String? value) =>
                                 _onSelectedPlugin(value!),
-                            items: _plugins.map((String dropDownStringItem) {
+                            items: _signals.map((String dropDownStringItem) {
                               return DropdownMenuItem<String>(
                                 value: dropDownStringItem,
                                 child: Text(dropDownStringItem),
                               );
                             }).toList(),
                           ),
-                          DropdownButtonFormField(
-                            value: _selectedBus,
-                            onChanged: (String? value) =>
-                                _onSelectedBus(value!),
-                            items: _busTypes.map((String dropDownStringItem) {
-                              return DropdownMenuItem<String>(
-                                value: dropDownStringItem,
-                                child: Text(dropDownStringItem),
-                              );
-                            }).toList(),
+                          TextFormField(
+                            controller: templateDesc,
+                            decoration:
+                            InputDecoration(hintText: 'Delay (on)'),
+                          ),
+                          TextFormField(
+                            controller: templateDesc,
+                            decoration:
+                            InputDecoration(hintText: 'Delay (off)'),
+                          ),
+                          TextFormField(
+                            controller: templateDesc,
+                            decoration:
+                            InputDecoration(hintText: 'Dead Band'),
                           ),
                           TextFormField(
                             controller: templateDesc,
@@ -134,26 +139,24 @@ class _DCUSignalSelectorState extends State<DCUSignalSelector> {
   void _writeJavisController() {
     print(templateName.text +
         " " +
-        _selectedPlugin +
-        " " +
-        _selectedBus +
+        _selectedSignal +
         " " +
         templateDesc.text);
 
     final DCUGenerator storage = DCUGenerator();
 
-    storage.writeFile(templateName.text, _selectedPlugin, _selectedBus);
+    // storage.writeFile(templateName.text, _selectedSignal, _selectedSignal);
   }
 
   void _onSelectedPlugin(String value) {
     setState(() {
-      _selectedPlugin = value;
-      _busTypes = repository.getBusByPlugin(value);
-      _selectedBus = _busTypes.first;
+      _selectedSignal = value;
+      // _busTypes = repository.getBusByPlugin(value);
+      // _selectedBus = _busTypes.first;
     });
   }
 
   void _onSelectedBus(String value) {
-    setState(() => _selectedBus = value);
+    // setState(() => _selectedBus = value);
   }
 }
