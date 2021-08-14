@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:forcam_mdc_generator/models/plugin_repository.dart';
 import 'package:forcam_mdc_generator/io/dcu_generator.dart';
 import 'package:forcam_mdc_generator/signals/mtconnectprot.dart';
+import 'package:forcam_mdc_generator/signals/signal_list.dart';
+
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:forcam_mdc_generator/models/signal.dart';
 
 class DCUSignalSelector extends StatefulWidget {
   DCUSignalSelector({Key? key, required this.title}) : super(key: key);
@@ -36,101 +40,13 @@ class _DCUSignalSelectorState extends State<DCUSignalSelector> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: 25.0,
-            ),
-            Text(
-              'Add DCU Signals',
-              style: Theme.of(context).textTheme.headline5,
-            ),
-            SizedBox(
-              height: 25.0,
-            ),
-            Card(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadiusDirectional.circular(15.0)),
-              child: Padding(
-                padding: const EdgeInsets.all(25.0),
-                child: Column(
-                  children: [
-                    SizedBox(
-                      width: 600,
-                      child: Column(
-                        children: [
-                          TextFormField(
-                            controller: templateName,
-                            decoration:
-                            InputDecoration(hintText: 'Name'),
-                          ),
-                          TextFormField(
-                            controller: templateName,
-                            decoration:
-                            InputDecoration(hintText: 'Signal Group'),
-                          ),
-                          DropdownButtonFormField(
-                            value: _selectedSignal,
-                            onChanged: (String? value) =>
-                                _onSelectedPlugin(value!),
-                            items: _signals.map((String dropDownStringItem) {
-                              return DropdownMenuItem<String>(
-                                value: dropDownStringItem,
-                                child: Text(dropDownStringItem),
-                              );
-                            }).toList(),
-                          ),
-                          TextFormField(
-                            controller: templateDesc,
-                            decoration:
-                            InputDecoration(hintText: 'Delay (on)'),
-                          ),
-                          TextFormField(
-                            controller: templateDesc,
-                            decoration:
-                            InputDecoration(hintText: 'Delay (off)'),
-                          ),
-                          TextFormField(
-                            controller: templateDesc,
-                            decoration:
-                            InputDecoration(hintText: 'Dead Band'),
-                          ),
-                          TextFormField(
-                            controller: templateDesc,
-                            decoration:
-                            InputDecoration(hintText: 'Alias'),
-                          ),
-                          TextFormField(
-                            controller: templateDesc,
-                            decoration:
-                            InputDecoration(hintText: 'Comment'),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 15.0,
-            ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                textStyle: TextStyle(
-                  fontSize: 18,
-                ),
-              ),
-              onPressed: () {
-                _writeJavisController();
-                // print(templateName.text + " " + _selectedPlugin + " " + _selectedBus + " " + templateDesc.text);
-              },
-              child: const Text('Submit'),
-            ),
-          ],
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: ValueListenableBuilder(
+            valueListenable: Hive.box('settings').listenable(),
+            builder: _buildWithBox,
+          ),
         ),
       ),
     );
@@ -148,7 +64,7 @@ class _DCUSignalSelectorState extends State<DCUSignalSelector> {
     // storage.writeFile(templateName.text, _selectedSignal, _selectedSignal);
   }
 
-  void _onSelectedPlugin(String value) {
+  void _onSelectedSignal(String value) {
     setState(() {
       _selectedSignal = value;
       // _busTypes = repository.getBusByPlugin(value);
@@ -156,7 +72,36 @@ class _DCUSignalSelectorState extends State<DCUSignalSelector> {
     });
   }
 
-  void _onSelectedBus(String value) {
-    // setState(() => _selectedBus = value);
+  Widget _buildWithBox(BuildContext context, Box settings, Widget? child) {
+    // var reversed = settings.get('reversed', defaultValue: true) as bool;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              'Signals',
+              style: TextStyle(fontSize: 28),
+            ),
+            const SizedBox(width: 20),
+          ],
+        ),
+        const SizedBox(height: 40),
+        Expanded(
+          child: ValueListenableBuilder<Box<Signal>>(
+            valueListenable: Hive.box<Signal>('signals').listenable(),
+            builder: (context, box, _) {
+              var signals = box.values.toList().cast<Signal>();
+              // if (reversed) {
+              //   signals = signals.reversed.toList();
+              // }
+              return SignalList(signals);
+            },
+          ),
+        ),
+      ],
+    );
   }
+
 }
