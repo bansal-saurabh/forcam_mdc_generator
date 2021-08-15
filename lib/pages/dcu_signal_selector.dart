@@ -23,6 +23,7 @@ class _DCUSignalSelectorState extends State<DCUSignalSelector> {
 
   String _selectedSignal = "I";
   bool _signalsAdded = false;
+  int signalIndex = 0;
 
   @override
   void initState() {
@@ -50,29 +51,39 @@ class _DCUSignalSelectorState extends State<DCUSignalSelector> {
         tooltip: 'Add New Signal',
         onPressed: () {
           if (!_signalsAdded) {
-            var signal = Signal()
+            var signal1 = Signal()
               ..name = ''
               ..signalGroup = ''
               ..type = ''
               ..alias = ''
               ..comment = '';
 
-            Hive.box<Signal>('signals').add(signal);
-
+            Hive.box<Signal>('signals').add(signal1);
             _signalsAdded = true;
-            print(signalName.text);
           } else {
-            var signal = Signal()
+            var signal1 = Signal()
+              ..name = ''
+              ..signalGroup = ''
+              ..type = ''
+              ..alias = ''
+              ..comment = '';
+
+            var signal2 = Signal()
               ..name = 'IDLE'
               ..signalGroup = ''
               ..type = 'Boolean'
               ..alias = 'Idle Signal'
               ..comment = 'Idle = 1, when the machine is not running!';
 
-            print(_signalsAdded);
-            Hive.box<Signal>('signals').add(signal);
-          }
+            var box = Hive.box<Signal>('signals');
 
+            box.putAt(signalIndex, signal2);
+            box.add(signal1);
+
+            print(box.getAt(signalIndex)!.key.toString() + " " + box.getAt(signalIndex)!.name);
+            ++signalIndex;
+            print(box.getAt(signalIndex)!.key.toString() + " " + box.getAt(signalIndex)!.name);
+          }
         },
       ),
     );
@@ -108,7 +119,7 @@ class _DCUSignalSelectorState extends State<DCUSignalSelector> {
               var signals = box.values.toList().cast<Signal>();
 
               SignalList signalList = SignalList(signals, signalName);
-              print(signalList.signalName.text);
+              // print(signalList.signalName.text);
               return signalList;
             },
           ),
