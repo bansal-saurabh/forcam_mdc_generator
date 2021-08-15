@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:forcam_mdc_generator/models/signal.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:hive/hive.dart';
 
 import 'mtconnectprot.dart';
 
 class SignalList extends StatefulWidget {
   final List<Signal> signals;
+  final TextEditingController signalName;
 
-  const SignalList(this.signals);
+  const SignalList(this.signals, this.signalName);
+
+  // String titleTextValue() {
+  //   print("title text field: ${signalName.text}");
+  //   return signalName.text;
+  // }
 
   @override
   _SignalListState createState() => _SignalListState();
@@ -17,6 +22,7 @@ class SignalList extends StatefulWidget {
 class _SignalListState extends State<SignalList> {
   late List<String> _signals;
   String _selectedSignal = "I";
+  bool _enableTextField = false;
 
   MTConnectProt mtConnectProt = MTConnectProt();
 
@@ -37,8 +43,8 @@ class _SignalListState extends State<SignalList> {
         crossAxisCount: 3,
         itemCount: widget.signals.length,
         itemBuilder: (BuildContext context, int index) {
-          var Signal = widget.signals[index];
-          return _buildSignal(Signal);
+          var signal = widget.signals[index];
+          return _buildSignal(signal);
         },
         staggeredTileBuilder: (int index) => new StaggeredTile.fit(1),
         mainAxisSpacing: 4.0,
@@ -62,7 +68,7 @@ class _SignalListState extends State<SignalList> {
                 child: Column(
                   children: [
                     TextFormField(
-                      // controller: templateName,
+                      controller: widget.signalName,
                       decoration: InputDecoration(hintText: 'Name'),
                     ),
                     TextFormField(
@@ -82,6 +88,7 @@ class _SignalListState extends State<SignalList> {
                       decoration: InputDecoration(hintText: 'Delay (on)'),
                     ),
                     TextFormField(
+                      enabled: _enableTextField,
                       decoration: InputDecoration(hintText: 'Delay (off)'),
                     ),
                     TextFormField(
@@ -130,12 +137,14 @@ class _SignalListState extends State<SignalList> {
       ),
     );
   }
-}
 
-void _onSelectedSignal(String value) {
-  // setState(() {
-  //   _selectedSignal = value;
-  //   // _busTypes = repository.getBusByPlugin(value);
-  //   // _selectedBus = _busTypes.first;
-  // });
+  void _onSelectedSignal(String value) {
+    setState(() {
+      _selectedSignal = value;
+      if (value == 'DBDX')
+        _enableTextField = true;
+      else
+        _enableTextField = false;
+    });
+  }
 }

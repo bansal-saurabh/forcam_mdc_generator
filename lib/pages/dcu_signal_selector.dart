@@ -19,14 +19,13 @@ class _DCUSignalSelectorState extends State<DCUSignalSelector> {
   final templateName = TextEditingController();
   final templateDesc = TextEditingController();
 
-  MTConnectProt mtConnectProt = MTConnectProt();
+  var signalName = TextEditingController();
 
-  List<String> _signals = ["Plugin Types"];
   String _selectedSignal = "I";
+  bool _signalsAdded = false;
 
   @override
   void initState() {
-    _signals = mtConnectProt.getSignals();
     super.initState();
   }
 
@@ -50,17 +49,30 @@ class _DCUSignalSelectorState extends State<DCUSignalSelector> {
         child: Icon(Icons.add, color: Colors.white),
         tooltip: 'Add New Signal',
         onPressed: () {
-          var signal = Signal()
-            ..name = 'IDLE'
-            ..signalGroup = ''
-            ..type = 'Boolean'
-            ..alias = 'Idle Signal'
-            ..comment = 'Idle = 1, when the machine is not running!';
+          if (!_signalsAdded) {
+            var signal = Signal()
+              ..name = ''
+              ..signalGroup = ''
+              ..type = ''
+              ..alias = ''
+              ..comment = '';
 
-          Hive.box<Signal>('signals').add(signal);
+            Hive.box<Signal>('signals').add(signal);
 
-          // Navigator.push(
-          //     context, MaterialPageRoute(builder: (context) => NewNotePage()));
+            _signalsAdded = true;
+            print(signalName.text);
+          } else {
+            var signal = Signal()
+              ..name = 'IDLE'
+              ..signalGroup = ''
+              ..type = 'Boolean'
+              ..alias = 'Idle Signal'
+              ..comment = 'Idle = 1, when the machine is not running!';
+
+            print(_signalsAdded);
+            Hive.box<Signal>('signals').add(signal);
+          }
+
         },
       ),
     );
@@ -72,14 +84,6 @@ class _DCUSignalSelectorState extends State<DCUSignalSelector> {
     final DCUGenerator storage = DCUGenerator();
 
     // storage.writeFile(templateName.text, _selectedSignal, _selectedSignal);
-  }
-
-  void _onSelectedSignal(String value) {
-    setState(() {
-      _selectedSignal = value;
-      // _busTypes = repository.getBusByPlugin(value);
-      // _selectedBus = _busTypes.first;
-    });
   }
 
   Widget _buildWithBox(BuildContext context, Box settings, Widget? child) {
@@ -102,7 +106,10 @@ class _DCUSignalSelectorState extends State<DCUSignalSelector> {
             valueListenable: Hive.box<Signal>('signals').listenable(),
             builder: (context, box, _) {
               var signals = box.values.toList().cast<Signal>();
-              return SignalList(signals);
+
+              SignalList signalList = SignalList(signals, signalName);
+              print(signalList.signalName.text);
+              return signalList;
             },
           ),
         ),
