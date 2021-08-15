@@ -16,10 +16,13 @@ class DCUSignalSelector extends StatefulWidget {
 }
 
 class _DCUSignalSelectorState extends State<DCUSignalSelector> {
-  final templateName = TextEditingController();
-  final templateDesc = TextEditingController();
+  late SignalList signalList;
 
   var signalName = TextEditingController();
+  var signalGroup = TextEditingController();
+  var signalType = TextEditingController();
+  var signalAlias = TextEditingController();
+  var signalComment = TextEditingController();
 
   String _selectedSignal = "I";
   bool _signalsAdded = false;
@@ -45,55 +48,79 @@ class _DCUSignalSelectorState extends State<DCUSignalSelector> {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.blue,
-        child: Icon(Icons.add, color: Colors.white),
-        tooltip: 'Add New Signal',
-        onPressed: () {
-          if (!_signalsAdded) {
-            var signal1 = Signal()
-              ..name = ''
-              ..signalGroup = ''
-              ..type = ''
-              ..alias = ''
-              ..comment = '';
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Container(
+            margin: const EdgeInsets.only(right: 10.0),
+            child: FloatingActionButton(
+              heroTag: 'Save',
+              backgroundColor: Colors.green,
+              child: Icon(Icons.save, color: Colors.white),
+              tooltip: 'Save Template',
+              onPressed: () {},
+            ),
+          ),
+          Container(
+            child: FloatingActionButton(
+              heroTag: 'Add',
+              backgroundColor: Colors.blue,
+              child: Icon(Icons.add, color: Colors.white),
+              tooltip: 'Add New Signal',
+              onPressed: () {
+                if (!_signalsAdded) {
+                  var signal1 = Signal()
+                    ..name = ''
+                    ..signalGroup = ''
+                    ..type = ''
+                    ..alias = ''
+                    ..comment = '';
 
-            Hive.box<Signal>('signals').add(signal1);
-            _signalsAdded = true;
-          } else {
-            var signal1 = Signal()
-              ..name = ''
-              ..signalGroup = ''
-              ..type = ''
-              ..alias = ''
-              ..comment = '';
+                  Hive.box<Signal>('signals').add(signal1);
+                  _signalsAdded = true;
+                } else {
+                  var signal1 = Signal()
+                    ..name = signalList.signalName.text
+                    ..signalGroup = signalList.signalGroup.text
+                    ..type = signalList.signalType.text
+                    ..alias = signalList.signalAlias.text
+                    ..comment = signalList.signalComment.text;
 
-            var signal2 = Signal()
-              ..name = 'IDLE'
-              ..signalGroup = ''
-              ..type = 'Boolean'
-              ..alias = 'Idle Signal'
-              ..comment = 'Idle = 1, when the machine is not running!';
+                  var signal2 = Signal()
+                    ..name = ''
+                    ..signalGroup = ''
+                    ..type = ''
+                    ..alias = ''
+                    ..comment = '';
 
-            var box = Hive.box<Signal>('signals');
+                  var box = Hive.box<Signal>('signals');
 
-            box.putAt(signalIndex, signal2);
-            box.add(signal1);
+                  // box.putAt(signalIndex, signal1);
+                  if (box.length > 0) {
+                    box.putAt((box.length - 1), signal1);
+                  }
 
-            print(box.getAt(signalIndex)!.key.toString() + " " + box.getAt(signalIndex)!.name);
-            ++signalIndex;
-            print(box.getAt(signalIndex)!.key.toString() + " " + box.getAt(signalIndex)!.name);
-          }
-        },
+                  box.add(signal2);
+
+                  print(box.getAt(signalIndex)!.key.toString() +
+                      " " +
+                      box.getAt(signalIndex)!.name);
+                  ++signalIndex;
+                  print(box.getAt(signalIndex)!.key.toString() +
+                      " " +
+                      box.getAt(signalIndex)!.name);
+                }
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
 
   void _writeJavisController() {
-    print(templateName.text + " " + _selectedSignal + " " + templateDesc.text);
-
-    final DCUGenerator storage = DCUGenerator();
-
+    // print(templateName.text + " " + _selectedSignal + " " + templateDesc.text);
+    // final DCUGenerator storage = DCUGenerator();
     // storage.writeFile(templateName.text, _selectedSignal, _selectedSignal);
   }
 
@@ -117,9 +144,18 @@ class _DCUSignalSelectorState extends State<DCUSignalSelector> {
             valueListenable: Hive.box<Signal>('signals').listenable(),
             builder: (context, box, _) {
               var signals = box.values.toList().cast<Signal>();
+              signalList = SignalList(
+                  signals: signals,
+                  signalName: signalName,
+                  signalGroup: signalGroup,
+                  signalType: signalType,
+                  signalAlias: signalAlias,
+                  signalComment: signalComment);
 
-              SignalList signalList = SignalList(signals, signalName);
+              // signalList1 = SignalList(signals, signalName, signalGroup,
+              //     signalType, signalAlias, signalComment, signals: [],);
               // print(signalList.signalName.text);
+              signals.forEach((element) => print(element.name));
               return signalList;
             },
           ),

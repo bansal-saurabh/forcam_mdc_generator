@@ -7,13 +7,22 @@ import 'mtconnectprot.dart';
 class SignalList extends StatefulWidget {
   final List<Signal> signals;
   final TextEditingController signalName;
+  final TextEditingController signalGroup;
+  final TextEditingController signalType;
+  final TextEditingController signalAlias;
+  final TextEditingController signalComment;
 
-  const SignalList(this.signals, this.signalName);
+  SignalList(
+      {Key? key,
+      required this.signals,
+      required this.signalName,
+      required this.signalGroup,
+      required this.signalType,
+      required this.signalAlias,
+      required this.signalComment})
+      : super(key: key);
 
-  // String titleTextValue() {
-  //   print("title text field: ${signalName.text}");
-  //   return signalName.text;
-  // }
+  // const SignalList(this.signals, this.signalName, this.signalGroup, this.signalType, this.signalAlias, this.signalComment);
 
   @override
   _SignalListState createState() => _SignalListState();
