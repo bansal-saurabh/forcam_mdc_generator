@@ -11,15 +11,6 @@ void main() async {
   await Hive.openBox<Signal>('signals');
   await Hive.openBox('settings');
 
-  var signal = Signal()
-    ..name = 'IDLE'
-    ..signalGroup = ''
-    ..type = 'Boolean'
-    ..alias = 'Idle Signal'
-    ..comment = 'Idle = 1, when the machine is not running!';
-
-  Hive.box<Signal>('signals').add(signal);
-
   runApp(MyApp());
 }
 
