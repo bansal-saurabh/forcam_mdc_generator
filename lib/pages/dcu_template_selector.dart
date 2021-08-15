@@ -63,7 +63,7 @@ class _DCUTemplateSelectorState extends State<DCUTemplateSelector> {
                       width: 600,
                       child: Column(
                         children: [
-                          TextFormField(
+                          TextField(
                             controller: templateName,
                             decoration:
                                 InputDecoration(hintText: 'Template Name'),
@@ -90,7 +90,7 @@ class _DCUTemplateSelectorState extends State<DCUTemplateSelector> {
                               );
                             }).toList(),
                           ),
-                          TextFormField(
+                          TextField(
                             controller: templateDesc,
                             decoration:
                                 InputDecoration(hintText: 'Description'),

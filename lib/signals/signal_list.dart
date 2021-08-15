@@ -30,14 +30,19 @@ class SignalList extends StatefulWidget {
 
 class _SignalListState extends State<SignalList> {
   late List<String> _signals;
-  String _selectedSignal = "I";
+  late List<String> _selectedSignalList;
+  late String _selectedSignal;
   bool _enableTextField = false;
+  late List<bool> _signalTypeChanged;
 
   MTConnectProt mtConnectProt = MTConnectProt();
 
   @override
   void initState() {
     _signals = mtConnectProt.getSignals();
+    // _selectedSignalList = ['I', 'DBDX', 'DBDW2', 'DBREAL', 'DBSTRING'];
+    _selectedSignal = _signals.first;
+    print(widget.signals.length);
     super.initState();
   }
 
@@ -48,12 +53,19 @@ class _SignalListState extends State<SignalList> {
         child: Text('No Signals created yet!'),
       );
     } else {
+      print ('Running now...');
       return StaggeredGridView.countBuilder(
         crossAxisCount: 3,
         itemCount: widget.signals.length,
         itemBuilder: (BuildContext context, int index) {
           var signal = widget.signals[index];
-          return _buildSignal(signal);
+          // print(signal);
+          // for (_selectedSignalList.length; _selectedSignalList.length <= widget.signals.length; widget.signals.length++) {
+          //   _selectedSignalList.add('I');
+          // }
+          _selectedSignalList = List.generate(widget.signals.length, (index) => 'I');
+          _signalTypeChanged = List.generate(widget.signals.length, (index) => false);
+          return _buildSignal(signal, index);
         },
         staggeredTileBuilder: (int index) => new StaggeredTile.fit(1),
         mainAxisSpacing: 4.0,
@@ -62,7 +74,10 @@ class _SignalListState extends State<SignalList> {
     }
   }
 
-  Widget _buildSignal(Signal signal) {
+  Widget _buildSignal(Signal signal, int index) {
+    if (index == widget.signals.length - 1) {
+      widget.signalName.clear();
+    }
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15.0),
@@ -76,37 +91,46 @@ class _SignalListState extends State<SignalList> {
               Expanded(
                 child: Column(
                   children: [
-                    TextFormField(
-                      controller: widget.signalName,
+                    TextField(
+                      controller: index == widget.signals.length - 1 ? widget.signalName : null,
+                      // controller: widget.signalName,
                       decoration: InputDecoration(hintText: 'Name'),
                     ),
-                    TextFormField(
+                    TextField(
                       decoration: InputDecoration(hintText: 'Signal Group'),
                     ),
                     DropdownButtonFormField(
-                      value: _selectedSignal,
-                      onChanged: (String? value) => _onSelectedSignal(value!),
+                      // value: index !=  widget.signals.length - 1 ? _selectedSignalList[index] : 'I',
+                      onChanged: (String? value) {
+                        setState(() {
+                          _selectedSignalList[index] = value!;
+                          _signalTypeChanged[index] = true;
+                        });
+                      },
+                      // => _onSelectedSignal(value!, index),
                       items: _signals.map((String dropDownStringItem) {
+                        // _signalTypeChanged = false;
                         return DropdownMenuItem<String>(
                           value: dropDownStringItem,
                           child: Text(dropDownStringItem),
                         );
                       }).toList(),
+                      value: _signalTypeChanged[index] ? _selectedSignalList[index] : _selectedSignal,
                     ),
-                    TextFormField(
+                    TextField(
                       decoration: InputDecoration(hintText: 'Delay (on)'),
                     ),
-                    TextFormField(
+                    TextField(
                       enabled: _enableTextField,
                       decoration: InputDecoration(hintText: 'Delay (off)'),
                     ),
-                    TextFormField(
+                    TextField(
                       decoration: InputDecoration(hintText: 'Dead Band'),
                     ),
-                    TextFormField(
+                    TextField(
                       decoration: InputDecoration(hintText: 'Alias'),
                     ),
-                    TextFormField(
+                    TextField(
                       decoration: InputDecoration(hintText: 'Comment'),
                     ),
                     const SizedBox(height: 20),
@@ -147,9 +171,10 @@ class _SignalListState extends State<SignalList> {
     );
   }
 
-  void _onSelectedSignal(String value) {
+  void _onSelectedSignal(String value, int index) {
     setState(() {
-      _selectedSignal = value;
+      _signalTypeChanged[index] = true;
+      _selectedSignalList[index] = value;
       if (value == 'DBDX')
         _enableTextField = true;
       else

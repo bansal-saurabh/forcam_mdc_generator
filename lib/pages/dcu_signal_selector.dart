@@ -101,14 +101,15 @@ class _DCUSignalSelectorState extends State<DCUSignalSelector> {
                   }
 
                   box.add(signal2);
+                  // signalList.signalName.clear();
 
-                  print(box.getAt(signalIndex)!.key.toString() +
-                      " " +
-                      box.getAt(signalIndex)!.name);
+                  // print(box.getAt(signalIndex)!.key.toString() +
+                  //     " " +
+                  //     box.getAt(signalIndex)!.name);
                   ++signalIndex;
-                  print(box.getAt(signalIndex)!.key.toString() +
-                      " " +
-                      box.getAt(signalIndex)!.name);
+                  // print(box.getAt(signalIndex)!.key.toString() +
+                  //     " " +
+                  //     box.getAt(signalIndex)!.name);
                 }
               },
             ),
@@ -155,7 +156,7 @@ class _DCUSignalSelectorState extends State<DCUSignalSelector> {
               // signalList1 = SignalList(signals, signalName, signalGroup,
               //     signalType, signalAlias, signalComment, signals: [],);
               // print(signalList.signalName.text);
-              signals.forEach((element) => print(element.name));
+              // signals.forEach((element) => print(element.name));
               return signalList;
             },
           ),
