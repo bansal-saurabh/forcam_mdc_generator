@@ -22,15 +22,11 @@ class _DCUSignalSelectorState extends State<DCUSignalSelector> {
   MTConnectProt mtConnectProt = MTConnectProt();
 
   List<String> _signals = ["Plugin Types"];
-  // List<String> _busTypes = ["Bus Types"];
-
   String _selectedSignal = "I";
-  // String _selectedBus = "AUDI_SPS_TCP";
 
   @override
   void initState() {
     _signals = mtConnectProt.getSignals();
-    // _busTypes = repository.getBusByPlugin(_selectedSignal);
     super.initState();
   }
 
@@ -42,22 +38,36 @@ class _DCUSignalSelectorState extends State<DCUSignalSelector> {
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(15.0),
+          padding: const EdgeInsets.all(25.0),
           child: ValueListenableBuilder(
             valueListenable: Hive.box('settings').listenable(),
             builder: _buildWithBox,
           ),
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.blue,
+        child: Icon(Icons.add, color: Colors.white),
+        tooltip: 'Add New Signal',
+        onPressed: () {
+          var signal = Signal()
+            ..name = 'IDLE'
+            ..signalGroup = ''
+            ..type = 'Boolean'
+            ..alias = 'Idle Signal'
+            ..comment = 'Idle = 1, when the machine is not running!';
+
+          Hive.box<Signal>('signals').add(signal);
+
+          // Navigator.push(
+          //     context, MaterialPageRoute(builder: (context) => NewNotePage()));
+        },
+      ),
     );
   }
 
   void _writeJavisController() {
-    print(templateName.text +
-        " " +
-        _selectedSignal +
-        " " +
-        templateDesc.text);
+    print(templateName.text + " " + _selectedSignal + " " + templateDesc.text);
 
     final DCUGenerator storage = DCUGenerator();
 
@@ -73,7 +83,6 @@ class _DCUSignalSelectorState extends State<DCUSignalSelector> {
   }
 
   Widget _buildWithBox(BuildContext context, Box settings, Widget? child) {
-    // var reversed = settings.get('reversed', defaultValue: true) as bool;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
@@ -81,8 +90,8 @@ class _DCUSignalSelectorState extends State<DCUSignalSelector> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              'Signals',
-              style: TextStyle(fontSize: 28),
+              'DCU Signals',
+              style: Theme.of(context).textTheme.headline5,
             ),
             const SizedBox(width: 20),
           ],
@@ -93,9 +102,6 @@ class _DCUSignalSelectorState extends State<DCUSignalSelector> {
             valueListenable: Hive.box<Signal>('signals').listenable(),
             builder: (context, box, _) {
               var signals = box.values.toList().cast<Signal>();
-              // if (reversed) {
-              //   signals = signals.reversed.toList();
-              // }
               return SignalList(signals);
             },
           ),
@@ -103,5 +109,4 @@ class _DCUSignalSelectorState extends State<DCUSignalSelector> {
       ],
     );
   }
-
 }
