@@ -33,6 +33,7 @@ class _SignalListState extends State<SignalList> {
   late List<String> _selectedSignalList;
   late String _selectedSignal;
   bool _enableTextField = false;
+  late List<bool> _enableTextFieldList;
   late List<bool> _signalTypeChanged;
 
   MTConnectProt mtConnectProt = MTConnectProt();
@@ -41,6 +42,7 @@ class _SignalListState extends State<SignalList> {
   void initState() {
     _signals = mtConnectProt.getSignals();
     // _selectedSignalList = ['I', 'DBDX', 'DBDW2', 'DBREAL', 'DBSTRING'];
+    _enableTextFieldList = List.generate(widget.signals.length, (index) => false);
     _selectedSignal = _signals.first;
     print(widget.signals.length);
     super.initState();
@@ -53,18 +55,21 @@ class _SignalListState extends State<SignalList> {
         child: Text('No Signals created yet!'),
       );
     } else {
-      print ('Running now...');
+      print('Running now...');
+      _selectedSignalList = List.generate(widget.signals.length, (index) => 'I');
+      _signalTypeChanged = List.generate(widget.signals.length, (index) => false);
+      _selectedSignalList.forEach((element) => print(element));
+
       return StaggeredGridView.countBuilder(
         crossAxisCount: 3,
         itemCount: widget.signals.length,
         itemBuilder: (BuildContext context, int index) {
           var signal = widget.signals[index];
-          // print(signal);
-          // for (_selectedSignalList.length; _selectedSignalList.length <= widget.signals.length; widget.signals.length++) {
-          //   _selectedSignalList.add('I');
-          // }
-          _selectedSignalList = List.generate(widget.signals.length, (index) => 'I');
-          _signalTypeChanged = List.generate(widget.signals.length, (index) => false);
+
+          // _selectedSignalList = List.filled(widget.signals.length, 'I');
+          // _enableTextFieldList = List.generate(widget.signals.length, (index) => false);
+
+          // print(widget.signals.length);
           return _buildSignal(signal, index);
         },
         staggeredTileBuilder: (int index) => new StaggeredTile.fit(1),
@@ -100,14 +105,17 @@ class _SignalListState extends State<SignalList> {
                       decoration: InputDecoration(hintText: 'Signal Group'),
                     ),
                     DropdownButtonFormField(
+
                       // value: index !=  widget.signals.length - 1 ? _selectedSignalList[index] : 'I',
-                      onChanged: (String? value) {
-                        setState(() {
-                          _selectedSignalList[index] = value!;
-                          _signalTypeChanged[index] = true;
-                        });
-                      },
+                      // onChanged: (String? value) {
+                      //   setState(() {
+                      //     _selectedSignalList[index] = value!;
+                      //     _signalTypeChanged[index] = true;
+                      //     _enableTextFieldList[index] = true;
+                      //   });
+                      // },
                       // => _onSelectedSignal(value!, index),
+                      onChanged: (String? value) => _onSelectedSignal(value!, index),
                       items: _signals.map((String dropDownStringItem) {
                         // _signalTypeChanged = false;
                         return DropdownMenuItem<String>(
@@ -121,7 +129,8 @@ class _SignalListState extends State<SignalList> {
                       decoration: InputDecoration(hintText: 'Delay (on)'),
                     ),
                     TextField(
-                      enabled: _enableTextField,
+                      enabled: _enableTextFieldList[index],
+                      // enabled: _enableTextField,
                       decoration: InputDecoration(hintText: 'Delay (off)'),
                     ),
                     TextField(
@@ -173,12 +182,13 @@ class _SignalListState extends State<SignalList> {
 
   void _onSelectedSignal(String value, int index) {
     setState(() {
-      _signalTypeChanged[index] = true;
       _selectedSignalList[index] = value;
+      _signalTypeChanged[index] = true;
+      _enableTextFieldList = List.generate(widget.signals.length, (index) => false);
       if (value == 'DBDX')
-        _enableTextField = true;
+        _enableTextFieldList[index] = true;
       else
-        _enableTextField = false;
+        _enableTextFieldList[index] = false;
     });
   }
 }

@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of '../models/signal.dart';
+part of 'signal.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
@@ -20,14 +20,18 @@ class SignalAdapter extends TypeAdapter<Signal> {
       ..name = fields[0] as String
       ..signalGroup = fields[1] as String
       ..type = fields[2] as String
-      ..alias = fields[3] as String
-      ..comment = fields[4] as String;
+      ..valueType = fields[3] as String
+      ..delayON = fields[4] as String
+      ..delayOFF = fields[5] as String
+      ..deadBand = fields[6] as String
+      ..alias = fields[7] as String
+      ..comment = fields[8] as String;
   }
 
   @override
   void write(BinaryWriter writer, Signal obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(9)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
@@ -35,8 +39,16 @@ class SignalAdapter extends TypeAdapter<Signal> {
       ..writeByte(2)
       ..write(obj.type)
       ..writeByte(3)
-      ..write(obj.alias)
+      ..write(obj.valueType)
       ..writeByte(4)
+      ..write(obj.delayON)
+      ..writeByte(5)
+      ..write(obj.delayOFF)
+      ..writeByte(6)
+      ..write(obj.deadBand)
+      ..writeByte(7)
+      ..write(obj.alias)
+      ..writeByte(8)
       ..write(obj.comment);
   }
 

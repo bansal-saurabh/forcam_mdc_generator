@@ -14,8 +14,20 @@ class Signal extends HiveObject {
   late String type;
 
   @HiveField(3)
-  late String alias;
+  late String valueType;
 
   @HiveField(4)
+  late String delayON;
+
+  @HiveField(5)
+  late String delayOFF;
+
+  @HiveField(6)
+  late String deadBand;
+
+  @HiveField(7)
+  late String alias;
+
+  @HiveField(8)
   late String comment;
 }

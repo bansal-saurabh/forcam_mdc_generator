@@ -155,7 +155,7 @@ class _DCUSignalSelectorState extends State<DCUSignalSelector> {
 
               // signalList1 = SignalList(signals, signalName, signalGroup,
               //     signalType, signalAlias, signalComment, signals: [],);
-              // print(signalList.signalName.text);
+              print(signalList.signalName.text);
               // signals.forEach((element) => print(element.name));
               return signalList;
             },
